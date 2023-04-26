@@ -1,9 +1,20 @@
-import { killDaemon, describe, flush, sendSignalToProcessName, startup, sendDataToProcessId, start, StartOptions, Proc, stop, restart, delete as del, reload, list, ProcessDescription } from 'pm2'
+import pm2 from 'pm2'
 export type Platform = 'ubuntu' | 'centos' | 'redhat' | 'gentoo' | 'systemd' | 'darwin' | 'amazon';
 export class Pm2Service {
-    kill(): Promise<ProcessDescription> {
+    connect() {
+        return new Promise<void>((resolve, reject) => {
+            pm2.connect((err) => {
+                if (err) return reject(err)
+                resolve()
+            })
+        })
+    }
+    disconnect() {
+        pm2.disconnect()
+    }
+    kill(): Promise<pm2.ProcessDescription> {
         return new Promise((resolve, reject) => {
-            killDaemon((err, result) => {
+            pm2.killDaemon((err, result) => {
                 if (err) return reject(err)
                 resolve(result)
             })
@@ -11,7 +22,7 @@ export class Pm2Service {
     }
     describe(process: string | number) {
         return new Promise((resolve, reject) => {
-            describe(process, (err, result) => {
+            pm2.describe(process, (err, result) => {
                 if (err) return reject(err)
                 resolve(result)
             })
@@ -19,7 +30,7 @@ export class Pm2Service {
     }
     flush(process: number | string) {
         return new Promise((resolve, reject) => {
-            flush(process, (err, result) => {
+            pm2.flush(process, (err, result) => {
                 if (err) return reject(err)
                 resolve(result)
             })
@@ -27,7 +38,7 @@ export class Pm2Service {
     }
     sendSignal(signal: string | number, process: number | string) {
         return new Promise((resolve, reject) => {
-            sendSignalToProcessName(signal, process, (err, result) => {
+            pm2.sendSignalToProcessName(signal, process, (err, result) => {
                 if (err) return reject(err)
                 resolve(result)
             })
@@ -35,7 +46,7 @@ export class Pm2Service {
     }
     startup(platform: Platform) {
         return new Promise((resolve, reject) => {
-            startup(platform, (err, result) => {
+            pm2.startup(platform, (err, result) => {
                 if (err) return reject(err)
                 resolve(result)
             })
@@ -43,58 +54,59 @@ export class Pm2Service {
     }
     sendData(proc_id: number, packet: object) {
         return new Promise((resolve, reject) => {
-            sendDataToProcessId(proc_id, packet, (err, result) => {
+            pm2.sendDataToProcessId(proc_id, packet, (err, result) => {
                 if (err) return reject(err)
                 resolve(result)
             })
         })
     }
-    list(): Promise<ProcessDescription[]> {
-        return new Promise((resolve, reject) => {
-            list((err, list) => {
+    async list(): Promise<pm2.ProcessDescription[]> {
+        const list = await new Promise<pm2.ProcessDescription[]>((resolve, reject) => {
+            pm2.list((err, list) => {
                 if (err) return reject(err)
                 resolve(list)
             })
         })
+        return list;
     }
-    start(options: StartOptions): Promise<Proc> {
+    async start(options: pm2.StartOptions): Promise<pm2.Proc> {
         return new Promise((resolve, reject) => {
-            start(options, (err, proc) => {
+            pm2.start(options, (err, proc) => {
                 if (err) return reject(err)
                 resolve(proc)
             })
         })
     }
-    stop(process: string | number): Promise<Proc> {
+    stop(process: string | number): Promise<pm2.Proc> {
         return new Promise((resolve, reject) => {
-            stop(process, (err, proc) => {
-                if (err) return reject(err)
-                resolve(proc)
-            })
-        })
-    }
-
-    restart(process: string | number): Promise<Proc> {
-        return new Promise((resolve, reject) => {
-            restart(process, (err, proc) => {
+            pm2.stop(process, (err, proc) => {
                 if (err) return reject(err)
                 resolve(proc)
             })
         })
     }
 
-    del(process: string | number): Promise<Proc> {
+    restart(process: string | number): Promise<pm2.Proc> {
         return new Promise((resolve, reject) => {
-            del(process, (err, proc) => {
+            pm2.restart(process, (err, proc) => {
                 if (err) return reject(err)
                 resolve(proc)
             })
         })
     }
 
-    reload(process: string | number): Promise<Proc> {
+    del(process: string | number): Promise<pm2.Proc> {
         return new Promise((resolve, reject) => {
-            reload(process, (err, proc) => {
+            pm2.delete(process, (err, proc) => {
+                if (err) return reject(err)
+                resolve(proc)
+            })
+        })
+    }
+
+    reload(process: string | number): Promise<pm2.Proc> {
+        return new Promise((resolve, reject) => {
+            pm2.reload(process, (err, proc) => {
                 if (err) return reject(err)
                 resolve(proc)
             })

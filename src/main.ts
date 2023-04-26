@@ -2,7 +2,7 @@ import { Logger } from "@imeepos/logger";
 import { reqidMiddleware, errorMiddleware } from '@imeepos/request';
 import imeeposAddon from '@imeepos/addon'
 import imeeposPm2 from '@imeepos/pm2'
-
+import { render } from '@imeepos/render'
 import { join } from "path";
 import { config } from 'dotenv';
 import { connect } from 'mongoose'
@@ -20,7 +20,7 @@ export async function bootstrap(root: string) {
     app.use((req, res, next) => {
         Reflect.set(req, 'root', root)
         next()
-    })
+    });
     app.use(reqidMiddleware)
     app.use('/addon', imeeposAddon())
     app.use('/pm2', imeeposPm2())

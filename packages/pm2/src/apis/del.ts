@@ -13,7 +13,9 @@ export async function del(req: Request, res: Response, next: NextFunction){
         if(!process){
             return fail(`body.process is required`)
         }
+        await pm2Service.connect()
         const proc = await pm2Service.del(process)
+        pm2Service.disconnect()
         return success(proc)
     } catch (e) {
         return fail(e)

@@ -9,8 +9,9 @@ export async function start(req: Request, res: Response, next: NextFunction){
         if (!body) {
             return fail(`body is required`)
         }
-        console.log(body)
+        await pm2Service.connect()
         const proc = await pm2Service.start(body)
+        pm2Service.disconnect()
         return success(proc)
     } catch (e) {
         return fail(e)

@@ -1,0 +1,20 @@
+{
+    "name": "@imeepos/cloud",
+    "version": "1.0.0",
+    "description": "",
+    "bin": {
+        "imeepos": "dist/bin.js"
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "postinstall": "tsc",
+        "tsc": "tsc -w"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "commander": "^10.0.1"
+    }
+}

@@ -1,14 +1,26 @@
 {
     "name": "@imeepos/pm2",
     "version": "1.0.0",
-    "description": "",
+    "description": "一个简单的pm2管理工具",
+    "title": "pm2管理工具",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
+    "static": [
+        {
+            "path": "index.html",
+            "title": "PM2管理",
+            "icon": "pm2"
+        }
+    ],
     "scripts": {
         "postinstall": "tsc"
     },
-    "keywords": [],
-    "author": "",
+    "keywords": [
+        "pm2",
+        "管理",
+        "ui"
+    ],
+    "author": "imeepos",
     "license": "ISC",
     "dependencies": {
         "@imeepos/core": "workspace:*"
