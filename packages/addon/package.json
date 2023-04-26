@@ -1,5 +1,5 @@
 {
-    "name": "@imeepos/request",
+    "name": "@imeepos/addon",
     "version": "1.0.0",
     "description": "",
     "main": "dist/index.js",
@@ -9,8 +9,5 @@
     },
     "keywords": [],
     "author": "",
-    "license": "ISC",
-    "dependencies": {
-    "@imeepos/logger": "workspace:*"
-    }
+    "license": "ISC"
 }

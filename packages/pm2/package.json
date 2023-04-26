@@ -1,5 +1,5 @@
 {
-    "name": "@imeepos/request",
+    "name": "@imeepos/pm2",
     "version": "1.0.0",
     "description": "",
     "main": "dist/index.js",
@@ -11,6 +11,6 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-    "@imeepos/logger": "workspace:*"
+        "@imeepos/core": "workspace:*"
     }
 }
