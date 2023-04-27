@@ -9,7 +9,8 @@ export const LoggerSchema = new Schema({
     label: String,
     reqid: String,
     siteid: String,
-    nodeid: String
+    nodeid: String,
+    args: Array
 })
 export const LoggerModel = model('logger', LoggerSchema)
 export interface MongoTransportOptions { 

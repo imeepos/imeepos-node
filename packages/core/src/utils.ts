@@ -9,8 +9,8 @@ export function usePromise() {
         _resolve = resolve
         _reject = reject
     })
-    const handler = (error: Error|undefined|null, data: unknown)=>{
-        if(error) _reject && _reject(error)
+    const handler = (error: Error | undefined | null, data: unknown) => {
+        if (error) _reject && _reject(error)
         else _resolve && _resolve(data)
     }
     return [_promise, handler]
@@ -36,4 +36,8 @@ export function useFail(res: Response) {
     return (error: Error | string | any) => {
         fail(res, error)
     }
+}
+
+export function isPromise<T>(res: any): res is Promise<T> {
+    return Reflect.has(res, 'then') && Reflect.has(res, 'catch')
 }

@@ -1,8 +1,8 @@
-import { Logger } from "@imeepos/logger";
+import "reflect-metadata"
+import { SystemLogger } from "@imeepos/logger";
 import { reqidMiddleware, errorMiddleware } from '@imeepos/request';
 import imeeposAddon from '@imeepos/addon'
 import imeeposPm2 from '@imeepos/pm2'
-import { render } from '@imeepos/render'
 import { join } from "path";
 import { config } from 'dotenv';
 import { connect } from 'mongoose'
@@ -10,7 +10,7 @@ import express from 'express'
 import cors from 'cors';
 
 export async function bootstrap(root: string) {
-    config()
+    config();
     connect(process.env.MONGO_URL || '')
     const app = express()
     app.use(express.json({}))
@@ -25,7 +25,7 @@ export async function bootstrap(root: string) {
     app.use('/addon', imeeposAddon())
     app.use('/pm2', imeeposPm2())
     app.use(errorMiddleware);
-    const logger = new Logger(root, 'main', 'none')
+    const logger = new SystemLogger()
     app.listen(8080, '0.0.0.0', () => {
         logger.info(`app start at http://0.0.0.0:8080`)
     })
