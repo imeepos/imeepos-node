@@ -28,6 +28,6 @@ export class Addon {
         return success(res, {})
     }
 
-    @v1.html(join(__dirname, '../static'), 'index.html', {})
+    @v1.html(join(__dirname, '../static'), 'index.html')
     index!: string;
 }

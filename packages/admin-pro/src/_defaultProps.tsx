@@ -1,6 +1,7 @@
-
 import { ChromeFilled, CrownFilled, SmileFilled, TabletFilled } from '@ant-design/icons';
-import * as React from 'react';
+import { ProLayoutProps } from '@ant-design/pro-components';
+
+import * as React from 'react'
 export default {
   route: {
     path: '/',
@@ -10,6 +11,7 @@ export default {
         name: '欢迎',
         icon: <SmileFilled />,
         component: './Welcome',
+        routes: []
       },
       {
         path: '/admin',
@@ -85,11 +87,24 @@ export default {
       },
       {
         path: 'https://ant.design',
-        name: 'Ant Design 官网外链',
+        name: '应用商城',
         icon: <ChromeFilled />,
       },
     ],
   },
+  menuData: [{
+    path: '/',
+    name: 'demo',
+    children: [{
+      name: 'demo-0'
+    }]
+  }, {
+    name: 'demo'
+  }, {
+    name: 'demo'
+  }, {
+    name: 'demo'
+  }],
   location: {
     pathname: '/',
   },
@@ -145,4 +160,4 @@ export default {
       url: 'https://d.umijs.org/zh-CN',
     },
   ],
-};
+} as ProLayoutProps;

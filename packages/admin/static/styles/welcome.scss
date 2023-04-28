@@ -1,0 +1,17 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+.ant-pro-layout .ant-pro-sider .ant-layout-sider-children {
+    min-height: calc(100vh - 60px);
+}
+.ant-pro-page-container{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .ant-pro-grid-content {
+        flex: 1;
+    }
+
+}

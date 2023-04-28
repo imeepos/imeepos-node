@@ -7,16 +7,17 @@ import { connect } from 'mongoose'
 import express from 'express'
 import cors from 'cors';
 import { ModuleDecorator, RouterModel } from '@imeepos/core';
-import { render } from '@imeepos/render'
+import { renders } from '@imeepos/render'
 import '@imeepos/addon';
+import '@imeepos/admin';
 
 export async function bootstrap(root: string) {
     config({ path: join(root, '.env') });
     connect(process.env.MONGO_URL || '')
     await RouterModel.updateMany({}, { status: -1 })
     const app = express()
-    app.use(express.json({}))
-    app.use(express.urlencoded({}))
+    app.use(express.json())
+    app.use(express.urlencoded())
     app.use(express.static('attachments'))
     app.use(cors())
     app.use((req, res, next) => {
@@ -35,12 +36,13 @@ export async function bootstrap(root: string) {
             call.bind(app)(key, handler)
         }
     })
-    ModuleDecorator.html.forEach((html) => {
-        render(html.template, {
-            meta: html.meta,
-            name: html.name,
-            root: html.root
-        }).catch(e => logger.error(`build html error ${html.name} ${html.template}`))
+    ModuleDecorator.html.forEach((htmls, key) => {
+        const [root, module, version] = key.split(':')
+        renders(root, module, version, [...htmls], true).then(()=>{
+            logger.info(`build html success`)
+        }).catch(e => {
+            logger.error(`build html error`)
+        })
     })
     app.use(errorMiddleware);
     const port = Number(process.env.PORT || 8080)

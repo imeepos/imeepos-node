@@ -28,7 +28,7 @@ export interface RouterOptions {
 }
 export class ModuleDecorator {
     static router: Map<string, Function> = new Map();
-    static html: Set<any> = new Set()
+    static html: Map<string, Set<string>> = new Map()
     constructor(public name: string, public version: string) { }
     private createMethod(method: string) {
         return (options: RouterOptions): MethodDecorator => {
@@ -72,17 +72,13 @@ export class ModuleDecorator {
         return this.createMethod('put')(options)
     }
 
-    html(root: string, html: string, meta: any): PropertyDecorator {
-        const opts = {
-            name: this.name,
-            meta,
-            template: html,
-            root
-        }
-        ModuleDecorator.html.add(opts)
+    html(root: string, html: string): PropertyDecorator {
+        const key = `${root}:${this.name}:${this.version}:`
+        const set = ModuleDecorator.html.get(key) || new Set()
+        set.add(html)
+        ModuleDecorator.html.set(key, set)
         process.nextTick(() => {
             saveRouter({
-                ...meta,
                 path: html || '',
                 method: 'GET',
                 module: this.name,
