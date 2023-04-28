@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { RequestService } from './request.service';
-import { Logger } from '@imeepos/logger'
+import { RequestLogger } from '@imeepos/logger'
 import { useRoot } from './useRoot';
 export async function reqidMiddleware(req: Request, res: Response, next: NextFunction) {
     try {
@@ -13,7 +13,7 @@ export async function reqidMiddleware(req: Request, res: Response, next: NextFun
         });
         const reqid = await new RequestService().save(req)
         const root = useRoot(req)
-        Reflect.set(req, 'logger', (label: string) => new Logger(root, label, reqid))
+        Reflect.set(req, 'logger', (label: string) => new RequestLogger(label, reqid))
         next()
     } catch (e) {
         next(e)

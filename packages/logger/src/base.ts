@@ -29,7 +29,6 @@ export abstract class BaseLogger {
                 level
             }))
         }
-        assert(_transports.length > 0, `请开启日志存储插件，配置 LOGGER_USE_MONGO = 1 或者 LOGGER_USE_FILE = 1`)
         this.log = createLogger({
             format: format.combine(
                 format.timestamp(),

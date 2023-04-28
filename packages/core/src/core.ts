@@ -43,7 +43,7 @@ export class NoImplementError extends CoreError { }
  * 禁止的文件类型错误
  */
 export class ForbiddenFileTypeError extends CoreError { }
-export abstract class WeBase<Settings = any> {
+export abstract class WeBase<Settings extends object = any> {
     uniacid: number = 0;
     weid: number = 0;
     modulename: string = '';
@@ -117,11 +117,50 @@ export abstract class WeBase<Settings = any> {
      * @param settings 
      */
     abstract saveSettings(settings: Settings): Promise<void>;
+    /**
+     * 获取配置
+     */
+    abstract getSetting(): Promise<Settings>;
 }
-export abstract class WeModule extends WeBase { }
-export abstract class WeModuleProcessor extends WeBase { }
-export abstract class WeModuleReceiver extends WeBase { }
-export abstract class WeModuleSite extends WeBase { }
+export abstract class WeModule extends WeBase {
+}
+/**
+ * 模块消息处理器
+ */
+export abstract class WeModuleProcessor extends WeBase {
+    async respText(): Promise<void> { }
+    async respImage(): Promise<void> { }
+    async respVoice(): Promise<void> { }
+    async respVideo(): Promise<void> { }
+    async respMusic(): Promise<void> { }
+    async respNews(): Promise<void> { }
+    async respCustom(): Promise<void> { }
+    async respWxapp(): Promise<void> { }
+}
+/**
+ * 模块订阅器
+ */
+export abstract class WeModuleReceiver extends WeBase {
+    abstract receive(): Promise<void>;
+}
+export abstract class WeModuleSite extends WeBase {
+    /**
+     * 调用系统的支付功能
+     */
+    abstract pay(): Promise<void>;
+    /**
+     * 调用系统的退款功能
+     */
+    abstract refund(): Promise<void>;
+    /**
+     * 这是一个回调方法, 当系统在支付完成时调用这个方法通知模块支付结果.
+     */
+    abstract payResult(): Promise<void>;
+    /**
+     * 查询当前模块的特定订单支付结果
+     */
+    abstract payResultQuery(): Promise<void>;
+}
 export abstract class WeModuleWxapp extends WeBase { }
 export abstract class WeModuleAliapp extends WeBase { }
 export abstract class WeModuleBaiduapp extends WeBase { }
@@ -130,4 +169,6 @@ export abstract class WeModuleHook extends WeBase { }
 export abstract class WeModuleWebapp extends WeBase { }
 export abstract class WeModulePhoneapp extends WeBase { }
 export abstract class WeModuleSystemWelcome extends WeBase { }
-export abstract class WeModuleMobile extends WeBase { }
+export abstract class WeModuleMobile extends WeBase {
+    __call(name: string, ...args: any[]) { }
+}

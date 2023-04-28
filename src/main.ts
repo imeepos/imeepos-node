@@ -1,17 +1,19 @@
 import "reflect-metadata"
 import { SystemLogger } from "@imeepos/logger";
 import { reqidMiddleware, errorMiddleware } from '@imeepos/request';
-import imeeposAddon from '@imeepos/addon'
-import imeeposPm2 from '@imeepos/pm2'
 import { join } from "path";
 import { config } from 'dotenv';
 import { connect } from 'mongoose'
 import express from 'express'
 import cors from 'cors';
+import { ModuleDecorator, RouterModel } from '@imeepos/core';
+import { render } from '@imeepos/render'
+import '@imeepos/addon';
 
 export async function bootstrap(root: string) {
-    config();
+    config({ path: join(root, '.env') });
     connect(process.env.MONGO_URL || '')
+    await RouterModel.updateMany({}, { status: -1 })
     const app = express()
     app.use(express.json({}))
     app.use(express.urlencoded({}))
@@ -22,12 +24,29 @@ export async function bootstrap(root: string) {
         next()
     });
     app.use(reqidMiddleware)
-    app.use('/addon', imeeposAddon())
-    app.use('/pm2', imeeposPm2())
-    app.use(errorMiddleware);
     const logger = new SystemLogger()
-    app.listen(8080, '0.0.0.0', () => {
-        logger.info(`app start at http://0.0.0.0:8080`)
+    ModuleDecorator.router.forEach((handler, key) => {
+        const reg = /(.*?)\:\/(.*)\/(v.*?)\/(.*)/
+        const matchRes = key.match(reg)
+        if (matchRes && matchRes.length === 5) {
+            const [str, method, module, version, path] = matchRes;
+            const call = Reflect.get(app, method.toLowerCase())
+            const key = `/${module}/${version}/${path}`
+            call.bind(app)(key, handler)
+        }
+    })
+    ModuleDecorator.html.forEach((html) => {
+        render(html.template, {
+            meta: html.meta,
+            name: html.name,
+            root: html.root
+        }).catch(e => logger.error(`build html error ${html.name} ${html.template}`))
+    })
+    app.use(errorMiddleware);
+    const port = Number(process.env.PORT || 8080)
+    const host = process.env.HOST || '0.0.0.0'
+    app.listen(port, host, () => {
+        logger.info(`app start at http://${host}:${port}`)
     })
 }
 

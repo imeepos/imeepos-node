@@ -3,7 +3,7 @@ import { build, BuildOptions } from "esbuild";
 import { extname, join } from "path";
 import autoprefixer from "autoprefixer";
 import postcss from "postcss";
-import { readFileSync, writeFileSync } from "fs-extra";
+import { ensureDirSync, readFileSync, writeFileSync } from "fs-extra";
 const { sassPlugin } = require("esbuild-sass-plugin");
 
 export async function render(template: string, locals: any) {
@@ -45,7 +45,7 @@ export async function render(template: string, locals: any) {
         }
     });
     const root = process.cwd();
-    const staticRoot = join(root, "attachments", locals.name || '');
+    const staticRoot = join(root, "attachments", locals.name || '', locals.version || 'v1');
     const options: BuildOptions = {
         entryPoints: [
             ...links.map((link) => join(locals.root, link)),
@@ -77,6 +77,7 @@ export async function render(template: string, locals: any) {
     };
     await build(options);
     const html = $.html();
+    ensureDirSync(staticRoot)
     writeFileSync(join(staticRoot, template), html)
     return join(staticRoot, template);
 }
