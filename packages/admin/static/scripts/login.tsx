@@ -1,11 +1,13 @@
 import * as React from 'react'
-import * as ReactDOMClient from 'react-dom/client'
-Reflect.set(window, 'process', { env: { NODE_ENV: process.env.NODE_ENV } })
+import { render } from './components/utils'
 export const Login = () => {
-    return <div>login page</div>
+    return <div className="login-page">
+        <div className="login-form">
+            <div className="form-item"><input type="text" /></div>
+            <div className="form-item"><input type="password" /></div>
+            <div className="form-item"><button>登录</button></div>
+            <div className="form-item"><a href="register.html">还没有账号，去注册</a></div>
+        </div>
+    </div>
 }
-async function bootstrap() {
-    const root = ReactDOMClient.createRoot(document.getElementById('app')!);
-    root.render(<Login />)
-}
-bootstrap();
+render(<Login />)

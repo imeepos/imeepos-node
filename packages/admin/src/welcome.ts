@@ -6,6 +6,12 @@ export class AdminWelcome {
     @v1.html(staticRoot, 'login.html')
     login!: string;
 
+    @v1.html(staticRoot, 'register.html')
+    register!: string;
+
     @v1.html(staticRoot, 'index.html')
     index!: string;
+
+    @v1.html(staticRoot, 'demo.html')
+    demo!: string;
 }

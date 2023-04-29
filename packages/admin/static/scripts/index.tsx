@@ -1,11 +1,6 @@
 import * as React from 'react'
-import * as ReactDOMClient from 'react-dom/client'
-Reflect.set(window, 'process', { env: { NODE_ENV: process.env.NODE_ENV } })
-export const Login = () => {
+import { render } from './components/utils'
+export const Index = () => {
     return <div>index page</div>
 }
-async function bootstrap() {
-    const root = ReactDOMClient.createRoot(document.getElementById('app')!);
-    root.render(<Login />)
-}
-bootstrap();
+render(<Index />)

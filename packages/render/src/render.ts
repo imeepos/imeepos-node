@@ -166,6 +166,12 @@ export function getSources(root: string, html: string) {
     $("link").each((i, el) => {
         const href = $(el).attr('href')
         if (href) {
+            if (href.startsWith('http')) {
+                return;
+            }
+            if (href.startsWith('/')) {
+                return;
+            }
             links.push(href);
         }
     });
@@ -173,6 +179,12 @@ export function getSources(root: string, html: string) {
     $("script").each((i, el) => {
         const src = $(el).attr('src')
         if (src) {
+            if (src.startsWith('http')) {
+                return;
+            }
+            if (src.startsWith('/')) {
+                return;
+            }
             scripts.push(src);
         }
     });

@@ -3,11 +3,11 @@
     padding: 0px;
 }
 
-a {
+a{
     text-decoration-line: none;
 }
 
-.login-page {
+.register-page {
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -15,7 +15,7 @@ a {
     align-items: center;
     justify-content: center;
 
-    .login-form {
+    .register-form {
         display: flex;
         flex-direction: column;
 
