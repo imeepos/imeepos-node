@@ -1,9 +1,8 @@
 import * as React from 'react'
 import * as ReactDOMClient from 'react-dom/client'
 Reflect.set(window, 'process', { env: { NODE_ENV: process.env.NODE_ENV } })
-import AccountLayout from './components/layout/account.layout'
 export const Login = () => {
-    return <AccountLayout />
+    return <div>login page</div>
 }
 async function bootstrap() {
     const root = ReactDOMClient.createRoot(document.getElementById('app')!);

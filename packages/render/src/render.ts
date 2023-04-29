@@ -126,7 +126,7 @@ export async function renders(root: string, name: string, version: string, htmls
                     htmls.map(html => {
                         return buildHtml(root, html, staticRoot)
                     })
-                })
+                }).catch(e => undefined)
             })
         }
     }
