@@ -14,4 +14,7 @@ export class AdminWelcome {
 
     @v1.html(staticRoot, 'demo.html')
     demo!: string;
+
+    @v1.html(staticRoot, 'curd.html')
+    curd!: string;
 }

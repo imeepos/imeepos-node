@@ -1,0 +1,17 @@
+{
+    "name": "@imeepos/ui",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "postinstall": "tsc",
+        "tsc": "tsc -w"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@imeepos/logger": "workspace:*"
+    }
+}

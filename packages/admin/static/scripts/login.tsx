@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { render } from './components/utils'
 export const Login = () => {
-    return <div className="login-page">
+    return <div className="page login-page">
         <div className="login-form">
             <div className="form-item"><input type="text" /></div>
             <div className="form-item"><input type="password" /></div>
