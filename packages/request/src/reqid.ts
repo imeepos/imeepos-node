@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { RequestService } from './request.service';
 import { RequestLogger } from '@imeepos/logger'
-import { useRoot } from './useRoot';
 export async function reqidMiddleware(req: Request, res: Response, next: NextFunction) {
     try {
         /**
@@ -12,7 +11,6 @@ export async function reqidMiddleware(req: Request, res: Response, next: NextFun
             new RequestService().update(req, statusCode, statusMessage)
         });
         const reqid = await new RequestService().save(req)
-        const root = useRoot(req)
         Reflect.set(req, 'logger', (label: string) => new RequestLogger(label, reqid))
         next()
     } catch (e) {

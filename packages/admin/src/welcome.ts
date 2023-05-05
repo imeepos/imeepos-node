@@ -1,4 +1,5 @@
 import { v1, staticRoot } from './decorators'
+import { getMenuItems } from './models/menu.model';
 export class AdminWelcome {
     @v1.html(staticRoot, 'welcome.html')
     welcome!: string;
@@ -17,4 +18,12 @@ export class AdminWelcome {
 
     @v1.html(staticRoot, 'curd.html')
     curd!: string;
+
+    @v1.html(staticRoot, 'settings.html')
+    settings!: string;
+
+    @v1.get({ path: 'getMenus' })
+    getMenus() { 
+        return getMenuItems()
+    }
 }

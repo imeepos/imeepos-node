@@ -1,26 +1,26 @@
-import { Model, Table, Column, CreatedAt, UpdatedAt, DeletedAt } from 'sequelize-typescript'
+import { Schema, model } from 'mongoose'
 
-@Table({})
-export class AttachmentModel extends Model {
-    @Column({
-        type: 'number',
-        autoIncrement: true,
-        comment: '附件编号',
-    })
-    id!: number;
+const AttachmentSchema = new Schema({
+    key: String,
+    bucket: String,
+    url: String
+})
 
-    @Column({
-        type: 'string',
-        comment: '附件链接'
-    })
-    url!: string;
+const AttachmentModel = model('attachment', AttachmentSchema)
 
-    @CreatedAt
-    create_at!: Date;
-
-    @UpdatedAt
-    update_at!: Date;
-
-    @DeletedAt
-    delete_at!: Date;
+export async function saveAttachment(bucket: string, key: string, url: string) {
+    const item = await AttachmentModel.findOne({ bucket, key })
+    if (!item) {
+        await new AttachmentModel({ bucket, key, url }).save()
+    }else{
+        await AttachmentModel.updateOne({bucket, key}, {url})
+    }
+}
+export async function delAttachment(bucket: string, key: string) {
+    await AttachmentModel.deleteOne({ bucket, key })
+}
+export async function saveAttachments(list: {bucket: string, key: string, url: string}[]){
+    await Promise.all(list.map(item=>{
+        return saveAttachment(item.bucket, item.key, item.url)
+    }))
 }

@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import { useReqid } from '@imeepos/request'
 export interface VoidFunction {
     (val: unknown): void;
 }
@@ -16,6 +17,8 @@ export function usePromise() {
     return [_promise, handler]
 }
 export function success<T>(res: Response, data: T) {
+    const reqid = useReqid(res.req)
+    res.set('ETag', reqid)
     res.json({ success: true, message: 'ok', data })
 }
 export function useSuccess(res: Response) {
@@ -24,6 +27,8 @@ export function useSuccess(res: Response) {
     }
 }
 export function fail(res: Response, error: Error | string | any) {
+    const reqid = useReqid(res.req)
+    res.set('ETag', reqid)
     if (error instanceof Error) {
         res.json({ success: false, message: error.message, data: { message: error.message, stack: error.stack } })
     } else if (typeof error === 'string') {

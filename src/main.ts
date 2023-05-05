@@ -4,10 +4,11 @@ import { reqidMiddleware, errorMiddleware } from '@imeepos/request';
 import { join } from "path";
 import { config } from 'dotenv';
 import { connect } from 'mongoose'
-import express from 'express'
+import express, { NextFunction, Request, Response } from 'express'
 import cors from 'cors';
-import { ModuleDecorator, RouterModel } from '@imeepos/core';
+import { ModuleDecorator, RouterModel, isPromise, success, fail, uploadExpress } from '@imeepos/core';
 import { renders } from '@imeepos/render'
+
 import '@imeepos/addon';
 import '@imeepos/admin';
 
@@ -16,6 +17,7 @@ export async function bootstrap(root: string) {
     connect(process.env.MONGO_URL || '')
     await RouterModel.updateMany({}, { status: -1 })
     const app = express()
+    app.set('etag', true);
     app.use(express.json())
     app.use(express.urlencoded())
     app.use(express.static('attachments'))
@@ -25,6 +27,7 @@ export async function bootstrap(root: string) {
         next()
     });
     app.use(reqidMiddleware)
+    uploadExpress(app);
     const logger = new SystemLogger()
     ModuleDecorator.router.forEach((handler, key) => {
         const reg = /(.*?)\:\/(.*)\/(v.*?)\/(.*)/
@@ -33,23 +36,32 @@ export async function bootstrap(root: string) {
             const [str, method, module, version, path] = matchRes;
             const call = Reflect.get(app, method.toLowerCase())
             const key = `/${module}/${version}/${path}`
-            call.bind(app)(key, handler)
+            call.bind(app)(key, (req: Request, res: Response, next: NextFunction) => {
+                const result = handler(req, res, next)
+                if (result) {
+                    if (isPromise(result)) {
+                        result.then(data => success(res, data)).catch(e => fail(res, e))
+                    } else {
+                        success(res, result)
+                    }
+                }
+            })
         }
-    })
+    });
     ModuleDecorator.html.forEach((htmls, key) => {
         const [root, module, version] = key.split(':')
-        renders(root, module, version, [...htmls], true).then(()=>{
+        renders(root, module, version, [...htmls], true).then(() => {
             logger.info(`build html success`)
         }).catch(e => {
             logger.error(`build html error`)
         })
-    })
+    });
     app.use(errorMiddleware);
     const port = Number(process.env.PORT || 8080)
     const host = process.env.HOST || '0.0.0.0'
     app.listen(port, host, () => {
         logger.info(`app start at http://${host}:${port}`)
-    })
+    });
 }
 
 bootstrap(join(__dirname, '..'))
